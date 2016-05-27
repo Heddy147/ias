@@ -1,0 +1,54 @@
+<%!
+    import cherrypy
+%>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Themen</title>
+    <link rel="stylesheet" type="text/css" href="/css/uikit.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/uikit.min.js"></script>
+</head>
+<body>
+    <a class="uk-button" href="/login/logout">Ausloggen</a>
+
+    <h1>Für Rennen anmelden</h1>
+
+    <a href="/index">Zur&uuml;ck</a>
+
+    <form class="uk-form" method="POST" data-besitzer-id="${besitzer_id}">
+
+        <fieldset data-uk-margin>
+            <select>
+                % for fahrzeug in fahrzeuge:
+                <tr class="fahrzeug" onclick="selectFahrzeug(this);" data-id="${fahrzeug[0]}">
+                    <option>${fahrzeug[0]}</option>
+                </tr>
+                % endfor
+            </select>
+            <select>
+                % for team in teams:
+                <tr class="team" onclick="selectTeam(this);" data-id="${team[0]}">
+                    <option>${team[0]}</option>
+                </tr>
+                % endfor
+            </select>
+            <select>
+                % for race in rennen:
+                <tr class="rennen" onclick="selectRennen(this);" data-id="${race[0]}">
+                    <option>${race[0]}</option>
+                </tr>
+                % endfor
+            </select>
+        </fieldset>
+        <p>
+            <button class="uk-button" type="submit" >speichern</button>
+        </p>
+    </form>
+
+
+</body>
+</html>

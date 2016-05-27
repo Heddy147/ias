@@ -1,0 +1,35 @@
+<%!
+    import cherrypy
+%>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Themen</title>
+    <link rel="stylesheet" type="text/css" href="/css/uikit.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/uikit.min.js"></script>
+</head>
+<body>
+    <a class="uk-button" href="/login/logout">Ausloggen</a>
+
+    <h1>Station erstellen</h1>
+
+    <a href="/index">Zur&uuml;ck</a>
+
+    <form class="uk-form" method="POST" data-besitzer-id="${rennleiter_id}">
+        <fieldset data-uk-margin>
+            <input type="text" placeholder="Bezeichnung">
+            <input type="text" placeholder="Lage (z.B. Entfernung zum Ziel)">
+            <input type="text" placeholder="Beschreibung (optional)">
+        </fieldset>
+        <p>
+            <button class="uk-button" type="submit" >speichern</button>
+        </p>
+    </form>
+
+
+</body>
+</html>

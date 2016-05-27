@@ -1,0 +1,48 @@
+<%!
+    import cherrypy
+%>
+<html lang="de">
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Themen</title>
+    <link rel="stylesheet" type="text/css" href="/css/uikit.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <script src="/js/jquery.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/rennleiter.js"></script>
+    <script src="/js/uikit.min.js"></script>
+</head>
+<body>
+
+    <a class="uk-button" href="/login/logout">Ausloggen</a>
+
+    <h1>Alle Teilnehmer</h1>
+
+    <button class="uk-button" onclick="deleteRegisterForRace();" disabled>Anmeldung löschen</button>
+    <button class="uk-button" onclick="detailsRegisterForRace();" disabled>Details der Anmeldung</button>
+
+    <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+        <tr>
+            <th class="id">Rennen-ID</th>
+            <th>Bezeichnung</th>
+            <th>Beschreibung</th>
+            <th>Datum</th>
+            <th>Leitung</th>
+            <th>Fahrzeug-ID</th>
+            <th>Ergebnis (Zeit)</th>
+        </tr>
+        % for anmeldung in anmeldungen:
+        <tr class="anmeldung" onclick="selectAnmeldung(this);" data-id="${anmeldung[0]}">
+            <td>${anmeldung[0]}</td>
+            <td><p></p></td>
+            <td><p></p></td>
+            <td><p></p></td>
+            <td><p></p></td>
+            <td><p></p></td>
+            <td><p>#zeitGesamt#</p></td>
+        </tr>
+        % endfor
+    </table>
+</body>
+</html>

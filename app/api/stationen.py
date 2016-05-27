@@ -19,7 +19,7 @@ class Stationen(RestAbstract):
 
 			return json.dumps({
 				"success": True,
-				"fahrzeugklassen": ModelAbstract.get_data_of_objects(station)
+				"stationen": ModelAbstract.get_data_of_objects(station)
 			})
 
 		return json.dumps({

@@ -21,7 +21,7 @@ class Personen(RestAbstract):
 
 			return json.dumps({
 				"success": True,
-				"fahrzeugklassen": ModelAbstract.get_data_of_objects(person)
+				"personen": ModelAbstract.get_data_of_objects(person)
 			})
 
 		return json.dumps({

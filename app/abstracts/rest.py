@@ -49,5 +49,4 @@ class RestAbstract:
 			if called_action not in allowed_actions:
 				self.user_allowed = False
 
-		self.user_allowed = True
 # EOF

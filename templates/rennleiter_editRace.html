@@ -1,0 +1,17 @@
+<h1>Rennen bearbeiten</h1>
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+<p>
+<form id="editRace" class="uk-form" method="POST">
+    <fieldset data-uk-margin>
+        <input type="hidden" name="id" value="#context.rennen.id#">
+        <input type="text" name="bezeichnung" placeholder="Bezeichnung" value="#context.rennen.bezeichnung#">
+        <input type="text" name="beschreibung" placeholder="Beschreibung" value="#context.rennen.beschreibung#">
+        <input type="text" name="datum" placeholder="Datum" value="#context.rennen.datum#">
+    </fieldset>
+    <p>
+        <button class="uk-button" type="submit" >speichern</button>
+    </p>
+</form>
+</p>

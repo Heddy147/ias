@@ -8,14 +8,20 @@ class Rennen(RestAbstract):
 	def GET(self, id=None):
 		super(Rennen, self).check_login()
 		if self.user_allowed:
-			if id is None:
-				rennen = RennenModel.find({"leiterId": User.logged_in_user.data["id"]}, 100000)
+			if User.logged_in_user.data["rolle"] == "leiter":
+				if id is None:
+					rennen = RennenModel.find({"leiterId": User.logged_in_user.data["id"]})
+				else:
+					rennen = RennenModel.find({"id": id, "leiterId": User.logged_in_user.data["id"]})
 			else:
-				rennen = RennenModel.find({"id": id, "leiterId": User.logged_in_user.data["id"]})
+				if id is None:
+					rennen = RennenModel.find(None, 100000)
+				else:
+					rennen = RennenModel.find({"id": id})
 
 			return json.dumps({
 				"success": True,
-				"fahrzeugklassen": ModelAbstract.get_data_of_objects(rennen)
+				"rennen": ModelAbstract.get_data_of_objects(rennen)
 			})
 
 		return json.dumps({
@@ -32,7 +38,7 @@ class Rennen(RestAbstract):
 		super(Rennen, self).check_login()
 		if self.user_allowed:
 			rennen = RennenModel()
-			rennen.data["leiterId"] = User.logged_in_user.data["id"]
+			rennen.data["leitungId"] = User.logged_in_user.data["id"]
 			rennen.data["bezeichnung"] = bezeichnung
 			rennen.data["beschreibung"] = beschreibung
 			rennen.data["datum"] = datum

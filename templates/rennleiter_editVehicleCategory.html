@@ -1,0 +1,18 @@
+<h1>Fahrzeugklasse bearbeiten</h1>
+
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+<p>
+<form id="editVehicleCategory" class="uk-form" method="POST">
+    <fieldset data-uk-margin>
+        <input type="hidden" name="id" value="#context.fahrzeugklassen.id#">
+        <input type="text" name="bezeichnung" value="#context.fahrzeugklassen.bezeichnung#" placeholder="Bezeichnung">
+        <input type="text" name="beschreibung" value="#context.fahrzeugklassen.beschreibung#" placeholder="Beschreibung">
+        <input type="text" name="zeit_in_string" value="#context.fahrzeugklassen.zeit_in_string#" placeholder="Qualifikationszeit">
+    </fieldset>
+    <p>
+        <button class="uk-button" type="submit" >speichern</button>
+    </p>
+</form>
+</p>

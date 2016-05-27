@@ -1,0 +1,131 @@
+# 1. Einleitung
+
+# 2. Entwurf der Anwendung
+
+## 2.1 Benutzungsschnittstelle
+
+### 2.1.1 Anwendungsrahmen und einzelne Sichten
+
+#### Login
+Der Benutzer muss ein Benutzername und Passwort eingeben. Je nach Rolle wird er nach erfolgreichem "Einloggen" zum jeweiligen Dashboard weitergeleitet.
+
+#### Registrieren
+Der Benutzer kann sich mit einem Benutzernamen und einem Passwort registrieren.
+
+#### Dashboard (Besitzer)
+Auf dem Dashboard des Besitzer findet der Besitzer eine Übersicht seiner Fahrzeuge und seiner Anmeldungen an Rennen.
+Von hier aus gelangt er zu seinen anderen Sichten.
+
+#### Neue Person (Besitzer)
+Der Besitzer muss die Daten einer Person (für seine Teams) eingeben.
+
+#### Person bearbeiten (Besitzer)
+Der Besitzer kann die Daten der ausgewählten Person (für seine Teams) ändern.
+
+#### Liste aller Rennen (Besitzer)
+Der Benutzer bekommt eine Liste ALLER Rennen angezeigt. Von hier aus gelangt er auch zu einer Anmeldung an ein Rennen.
+
+#### Anmeldung an Rennen (Besitzer)
+Der Besitzer kann sich an ein Rennen anmelden. Er muss dazu ein Fahrzeug auswählen.
+
+#### Neues Fahrzeug (Besitzer)
+Der Besitzer muss die Daten seines Fahrzeugs eingeben.
+
+#### Fahrzeug bearbeiten (Besitzer)
+Der Besitzer kann die Daten des ausgewählten Fahrzeugs ändern.
+
+#### Dashboard (Leiter)
+Je nach Status des eigenen Rennens bekommt ein Rennleiter eine Liste seines Rennens angezeigt.
+Wenn der Leiter kein aktuelles Rennen am laufen hat, wird dem Leiter lediglich eine Möglichkeit geboten ein neues Rennen anzulegen.
+
+Sollte ein Rennen vom Rennleiter vorhanden sein, wird eine Liste mit den Anmeldungen zum Rennen angezeigt.
+Hier unterscheidet sich die Liste zwischen Anmeldephase und Qualifikationsphase.
+
+In der Anmeldephase hat der Rennleiter die Möglichkeit die Ergebnisse der Qualifikation einzutragen.
+Zusätzlich kann er die Daten inkl. Fahrzeugdaten und Personendaten aller Anmeldungen bearbeiten.
+
+In der Qualifikationsphase kann der Rennleiter die Ergebnisse des Rennens inkl. aller Stationsergebnisse eintragen.
+Danach wird wiederum der Status "kein Rennen vorhanden" eintreten.
+
+Außerdem wird dem Rennleiter die Möglichkeit geboten die Fahrzeugklassen zu pflegen. Dies kann er allerdings nur, wenn er aktuell kein Rennen am laufen hat hat oder das Rennen in der Anmeldephase ist.
+
+### 2.1.2 Zustandsmodell
+
+**HIER KOMMT BILD**
+
+## 2.2 Datenaustausch Client - Server (REST)
+Der Datenaustausch zwischen dem Client und dem Server erfolgt über eine REST-Schnittstelle. Dafür gibt es im Framework "CherryPy" eine bestimmte Funktion, die die HTTP-Request-Methoden (GET, POST, PUT, DELETE) automatisch zu den richtigen Methoden der jeweiligen Klasse führt.
+Jede HTTP-Request-Methode hat also eine eigene Klassenmethode.
+
+Folgende Methoden für verschiedene Datensätze werden unterstützt:
+
++----------------------+-----------------------+----------------------------------------------------------------------------+
+| Datensatz 		   | Methode 			   | Benötigte Parameter 														|
++======================+=======================+============================================================================+
+| Anmeldungen 		   | GET, POST, PUT, DELETE| GET: [id], [rennId], [fahrzeugId];											|
+|					   |					   | POST: rennId, fahrzeugId;													|
+|					   |					   | PUT: id, rennId, fahrzeugId;												|
+|					   |					   | DELETE: id 																|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+| Fahrzeug 			   | GET, POST, PUT, DELETE| GET: [id];																	|
+|					   |					   |POST: marke, typ, baujahr, hubraum, leistung, beschreibung,					|
+|					   |					   |	  kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
+|					   |					   |PUT: id, marke, typ, baujahr, hubraum, leistung, beschreibung,				|
+|					   |					   |	 kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
+|					   |					   |DELETE: id 																	|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Fahrzeugklasse 	   | GET, POST, PUT, DELETE|GET: [id];																	|
+|					   |					   |POST: bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;		|
+|					   |					   |PUT: id, bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;	|
+|					   |					   |DELETE: id 																	|
+|Login 				   | PUT				   |PUT: benutzename, passwort 													|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Person 			   | GET, POST, PUT, DELETE|GET: [id]; 																	|
+|					   |					   |POST: vorname, nachname, fuehrerschein; 									|
+|					   |					   |PUT: id, vorname, nachname, fuehrerschein; 									|
+|					   |					   |DELETE: id 																	|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Qualifikationsergebnis| POST				   |POST: ergebnisse, rennId													|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Registrierung 		   | POST				   |POST: benutzername, passwort												|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Rennen 			   | GET, POST, PUT, DELETE|GET: [id]; 																	|
+|					   |					   |POST: bezeichnung, beschreibung, datum;										|
+|					   |					   |PUT: id, bezeichnung, beschreibung, datum;									|
+|					   |					   |DELETE: id 																	|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Rennergebnis		   | POST				   |POST: ergebnisse, rennId													|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+|Station 			   | GET, POST, PUT, DELETE|GET: [id], [rennId]; 														|
+|					   |					   |POST: bezeichnung, lage, beschreibung, rennId;								|
+|					   |					   |PUT: id, bezeichnung, lage, beschreibung, rennId;							|
+|					   |					   |DELETE: id 																	|
++----------------------+-----------------------+----------------------------------------------------------------------------+
+
+Folgende Aktionen werden durch die verschiedenen HTTP-Request-Methoden ausgeführt:
+
+**GET**
+Datensätze werden geladen und zum Client geschickt.
+Dabei können optional Parameter übergeben werden, welche die Ergebnisse schon auf dem Server filtern. Die Parameter-Namen sind analog zu den Feldern eines Datensatzes.
+
+**POST**
+Es wird ein neue Datensatz eingetragen. Die Felder sind alle Pflicht und müssen zumindest LEER mit übertragen werden.
+
+**PUT**
+Es wird ein vorhandener Datensatz aktualisiert. Auch hier müssen die Felder alle angegeben werden, wenn auch LEER.
+Der Datensatz mit der ID "id" wird aktualisiert.
+
+**DELETE**
+Ein vorhandener Datensatz wird anhand der "id" gelöscht.
+
+
+# 3. Implementierung der Anwendung
+
+## 3.1 Web-Client
+
+
+## 3.2. Web-Server
+
+### 3.2.1 Bearbeitung der Anfragen
+
+### 3.2.2 Speicherung von Daten

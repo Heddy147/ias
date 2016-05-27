@@ -2,7 +2,8 @@ import json
 from app.abstracts.rest import RestAbstract
 from app.abstracts.model import ModelAbstract
 from app.models.Anmeldung import Anmeldung
-from app.models.User import User
+from app.models.Rennen import Rennen
+from app.models.Fahrzeug import Fahrzeug
 
 class Anmeldungen(RestAbstract):
 	def GET(self, id=None, rennId=None, fahrzeugId=None):
@@ -38,6 +39,19 @@ class Anmeldungen(RestAbstract):
 	):
 		super(Anmeldungen, self).check_login()
 		if self.user_allowed:
+			rennen = Rennen.find({"id": rennId})
+			if rennen is None:
+				return json.dumps({
+					"success": False,
+					"message": "Rennen nicht gefunden!"
+				})
+			fahrzeug = Fahrzeug.find({"id": fahrzeugId})
+			if fahrzeug is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrzeug nicht gefunden!"
+				})
+
 			anmeldung = Anmeldung()
 			anmeldung.data["rennId"] = rennId
 			anmeldung.data["fahrzeugId"] = fahrzeugId

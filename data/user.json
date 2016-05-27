@@ -1,1 +1,1 @@
-{"1": {"benutzername": "dominik", "id": 1, "passwort": "dominik1234", "rolle": "leitung"}, "2": {"benutzername": "david", "id": 2, "rolle": "besitzer", "passwort": "david1234"}}
+{"1": {"benutzername": "dominik", "id": 1, "passwort": "dominik1234", "rolle": "leitung"}, "2": {"benutzername": "david", "id": 2, "passwort": "david1234", "rolle": "besitzer"}, "3": {"benutzername": "dominik2", "id": 3, "passwort": "dominik12345", "rolle": "besitzer"}, "4": {"benutzername": "David1234", "id": 4, "passwort": "david1234", "rolle": "besitzer"}}

@@ -4,6 +4,7 @@ from app.abstracts.model import ModelAbstract
 from app.models.Fahrzeug import Fahrzeug
 from app.models.Fahrzeugklasse import Fahrzeugklasse
 from app.models.User import User
+from app.models.Person import Person
 
 
 class Fahrzeuge(RestAbstract):
@@ -57,12 +58,36 @@ class Fahrzeuge(RestAbstract):
 
 			### Müssen noch auf Korrektheit ueberprueft werden
 			fahrzeugklasse = Fahrzeugklasse.find({"id": typ})
-			if fahrzeugklasse is not None:
-				fahrzeug.data["typ"] = 0 # dummy
+			if fahrzeugklasse is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrzeugklasse existiert nicht!"
+				})
+			fahrzeug.data["typ"] = typ
 
-			fahrzeug.data["fahrerId"] = 0 # dummy
-			fahrzeug.data["beifahrerId"] = 0 # dummy
-			fahrzeug.data["mechanikerId"] = 0 # dummy
+			fahrer = Person.find({"id": fahrerId})
+			if fahrer is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrer existiert nicht!"
+				})
+			fahrzeug.data["fahrerId"] = fahrerId
+
+			beifahrer = Person.find({"id": beifahrerId})
+			if beifahrer is None:
+				return json.dumps({
+					"success": False,
+					"message": "Beifahrer existiert nicht!"
+				})
+			fahrzeug.data["beifahrerId"] = beifahrerId
+
+			mechaniker = Person.find({"id": mechanikerId})
+			if mechaniker is None:
+				return json.dumps({
+					"success": False,
+					"message": "Mechaniker existiert nicht!"
+				})
+			fahrzeug.data["mechanikerId"] = mechanikerId
 
 			if fahrzeug.save():
 				return json.dumps({
@@ -74,6 +99,109 @@ class Fahrzeuge(RestAbstract):
 					"success": False,
 					"messages": fahrzeug.required_fields_empty
 				})
+
+		return json.dumps({
+			"success": False,
+			"message": "Aktion nicht erlaubt!"
+		})
+
+	def PUT(
+			self,
+			id,
+			marke,
+			typ,
+			baujahr,
+			hubraum,
+			leistung,
+			beschreibung,
+			kennzeichen,
+			fahrerId,
+			beifahrerId,
+			mechanikerId
+	):
+		super(Fahrzeuge, self).check_login()
+		if self.user_allowed:
+			fahrzeug = Fahrzeug.find({"id": id})
+
+			if fahrzeug is None:
+				return json.dumps({
+					"success": False,
+					"messages": "Fahrzeugklasse nicht vorhanden!"
+				})
+
+			fahrzeug.data["besitzer"] = User.logged_in_user.data["id"]
+			fahrzeug.data["marke"] = marke
+			fahrzeug.data["baujahr"] = baujahr
+			fahrzeug.data["hubraum"] = hubraum
+			fahrzeug.data["leistung"] = leistung
+			fahrzeug.data["beschreibung"] = beschreibung
+			fahrzeug.data["kennzeichen"] = kennzeichen
+
+			### Müssen noch auf Korrektheit ueberprueft werden
+			fahrzeugklasse = Fahrzeugklasse.find({"id": typ})
+			if fahrzeugklasse is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrzeugklasse existiert nicht!"
+				})
+			fahrzeug.data["typ"] = typ
+
+			fahrer = Person.find({"id": fahrerId})
+			if fahrer is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrer existiert nicht!"
+				})
+			fahrzeug.data["fahrerId"] = fahrerId
+
+			beifahrer = Person.find({"id": beifahrerId})
+			if beifahrer is None:
+				return json.dumps({
+					"success": False,
+					"message": "Beifahrer existiert nicht!"
+				})
+			fahrzeug.data["beifahrerId"] = beifahrerId
+
+			mechaniker = Person.find({"id": mechanikerId})
+			if mechaniker is None:
+				return json.dumps({
+					"success": False,
+					"message": "Mechaniker existiert nicht!"
+				})
+			fahrzeug.data["mechanikerId"] = mechanikerId
+
+			if fahrzeug.save():
+				return json.dumps({
+					"success": True,
+					"data": fahrzeug.data
+				})
+			else:
+				return json.dumps({
+					"success": False,
+					"messages": fahrzeug.required_fields_empty
+				})
+
+		return json.dumps({
+			"success": False,
+			"message": "Aktion nicht erlaubt!"
+		})
+
+	def DELETE(self, id):
+		super(Fahrzeuge, self).check_login()
+		if self.user_allowed:
+			fahrzeug = Fahrzeug.find({"id": id})
+
+			if fahrzeug is None:
+				return json.dumps({
+					"success": False,
+					"messages": "Fahrzeug nicht vorhanden!"
+				})
+
+			fahrzeug.delete()
+
+			return json.dumps({
+				"success": True
+			})
 
 		return json.dumps({
 			"success": False,

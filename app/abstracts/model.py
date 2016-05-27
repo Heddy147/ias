@@ -1,7 +1,6 @@
 import cherrypy
 import json
 
-
 class ModelAbstract:
 	data_file_name = ''
 	data = {"id": 0}
@@ -20,10 +19,11 @@ class ModelAbstract:
 
 		if conditions is None:
 			for ad in all_data:
-				user = cls()
-				user.data = all_data[ad]
+				model = cls()
+				model.data = all_data[ad]
+				model.after_find()
 				if counted < count:
-					found_data.append(user)
+					found_data.append(model)
 				else:
 					return found_data
 			return found_data
@@ -32,24 +32,30 @@ class ModelAbstract:
 			is_okay = True
 
 			for c in conditions:
-				if all_data[ad][c] != conditions[c]:
+				condition = conditions[c]
+				value = all_data[ad][c]
+				if type(value) is int:
+					condition = int(condition)
+
+				if value != condition:
 					is_okay = False
 					break
 
 			if is_okay:
-				user = cls()
-				user.data = all_data[ad]
+				model = cls()
+				model.data = all_data[ad]
 				if int(count) is 1:
-					return user
+					return model
 
 				if counted < count:
-					found_data.append(user)
+					found_data.append(model)
 				else:
 					return found_data
 
 				counted += 1
 
-		if int(count) is 1:
+		if int(count) == 1:
+			print("count 1 not found")
 			return None
 
 		return found_data
@@ -57,7 +63,7 @@ class ModelAbstract:
 	def save(self):
 		for r in self.required_fields:
 			if r not in self.data or self.data[r] == "":
-				self.required_fields_empty.append(self.required_fields[r])
+				self.required_fields_empty.append(r)
 
 		if len(self.required_fields_empty) > 0:
 			return False
@@ -66,9 +72,9 @@ class ModelAbstract:
 
 		if self.data["id"] == 0:
 			new_id = ModelAbstract.get_last_id(all_data)
-			self.data["id"] = new_id
+			self.data["id"] = str(new_id)
 
-		all_data[self.data["id"]] = self.data
+		all_data[str(self.data["id"])] = self.data
 
 		self.save_all(all_data)
 
@@ -87,19 +93,22 @@ class ModelAbstract:
 	def delete(self):
 		all_data = self.load_all()
 
-		if self.data["id"] in all_data:
-			del all_data[self.data["id"]]
+		if str(self.data["id"]) in all_data:
+			del all_data[str(self.data["id"])]
 
 		self.save_all(all_data)
 
 		return True
+
+	def after_find(self):
+		pass
 
 	@staticmethod
 	def get_data_of_objects(data):
 		if type(data) is list:
 			list_data = []
 			for d in data:
-				list_data.append(data[d].data)
+				list_data.append(d.data)
 			return list_data
 
 		return data.data

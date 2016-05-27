@@ -1,4 +1,5 @@
 import cherrypy
+import time
 from app.abstracts.model import ModelAbstract
 
 class User(ModelAbstract):
@@ -9,7 +10,7 @@ class User(ModelAbstract):
 	def user_logged_in():
 		cookie = cherrypy.request.cookie
 		if "user" in cookie:
-			username = cherrypy.request.cookie["user"]
+			username = cherrypy.request.cookie["user"].value
 			user = User.find({"benutzername": username})
 			if user is not None:
 				User.logged_in_user = user
@@ -23,7 +24,7 @@ class User(ModelAbstract):
 	def login_user(username):
 		cherrypy.response.cookie["user"] = username
 		cherrypy.response.cookie['user']['path'] = '/'
-		cherrypy.response.cookie['user']['max-age'] = 3600
+		cherrypy.response.cookie['user']['max-age'] = time.time() + 3600
 		cherrypy.response.cookie['user']['version'] = 1
 		user = User.find({"benutzername": username})
 		if user is not None:

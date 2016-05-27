@@ -2,7 +2,7 @@
 import os
 import cherrypy
 from app import application, template
-from app.api import login, registrieren, fahrzeuge
+from app.api import anmeldungen, fahrzeuge, fahrzeugklassen, login, personen, qualiergebnisse, registrieren, rennen, rennergebnisse, stationen
 
 def validate_password(realm, username, password):
 	users = application.db.load_user()
@@ -45,9 +45,16 @@ def main():
 		}
 	})
 
-	cherrypy.tree.mount(login.Login(), '/login', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
-	cherrypy.tree.mount(registrieren.Registrieren(), '/registrieren', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
-	cherrypy.tree.mount(fahrzeuge.Fahrzeuge(), '/fahrzeuge', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(anmeldungen.Anmeldungen(), '/api/anmeldung', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(fahrzeuge.Fahrzeuge(), '/api/fahrzeuge', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(fahrzeugklassen.Fahrzeugklassen(), '/api/fahrzeugklassen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(login.Login(), '/api/login', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(personen.Personen(), '/api/personen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(qualiergebnisse.Qualiergebnisse(), '/api/qualiergebnisse', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(registrieren.Registrieren(), '/api/registrieren', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(rennen.Rennen(), '/api/rennen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(rennergebnisse.Rennergebnis(), '/api/rennergebnisse', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(stationen.Stationen(), '/api/stationen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 
 	cherrypy.tree.mount(template.Template(), '/template', {
 		'/': {

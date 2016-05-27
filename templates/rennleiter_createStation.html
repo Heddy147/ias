@@ -1,0 +1,17 @@
+<h1>Station erstellen</h1>
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+<p>
+<form id="createStation" class="uk-form" method="POST">
+    <fieldset data-uk-margin>
+        <input type="hidden" name="rennId" value="#context.rennId#" />
+        <input type="text" name="bezeichnung" placeholder="Bezeichnung">
+        <input type="text" name="lage" placeholder="Lage (z.B. Entfernung zum Ziel)">
+        <input type="text" name="beschreibung" placeholder="Beschreibung (optional)">
+    </fieldset>
+    <p>
+        <button class="uk-button" type="submit" >speichern</button>
+    </p>
+</form>
+</p>

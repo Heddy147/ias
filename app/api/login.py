@@ -16,6 +16,6 @@ class Login(RestAbstract):
 				User.login_user(benutzername)
 				return json.dumps({'success': True, 'user': User.logged_in_user.data})
 
-		return json.dumps({'success': False})
+		return json.dumps({'success': False, 'message': 'Benutzername oder Passwort falsch!'})
 
 # EOF

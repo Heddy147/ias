@@ -13,6 +13,12 @@ class Fahrzeugklassen(RestAbstract):
 			else:
 				fahrzeugklassen = Fahrzeugklasse.find({"id": id})
 
+			if fahrzeugklassen is None:
+				return json.dumps({
+					"success": False,
+					"message": "Fahrzeugklasse wurde nicht gefunden!"
+				})
+
 			return json.dumps({
 				"success": True,
 				"fahrzeugklassen": ModelAbstract.get_data_of_objects(fahrzeugklassen)
@@ -27,11 +33,18 @@ class Fahrzeugklassen(RestAbstract):
 			self,
 			bezeichnung,
 			beschreibung,
-			zeit_in_millisekunden,
 			zeit_in_string
 	):
 		super(Fahrzeugklassen, self).check_login()
 		if self.user_allowed:
+			params_zeit = zeit_in_string.split(':')
+			if(len(params_zeit) < 3):
+				return json.dumps({
+					"success": False,
+					"message": "Format der Qualifikationszeit ist fehlerhaft"
+				})
+
+			zeit_in_millisekunden = (int(params_zeit[0]) * 60 + int(params_zeit[1])) * 1000 + int(params_zeit[2])
 			fahrzeugklasse = Fahrzeugklasse()
 			fahrzeugklasse.data["bezeichnung"] = bezeichnung
 			fahrzeugklasse.data["beschreibung"] = beschreibung
@@ -59,11 +72,19 @@ class Fahrzeugklassen(RestAbstract):
 			id,
 			bezeichnung,
 			beschreibung,
-			zeit_in_millisekunden,
 			zeit_in_string
 	):
 		super(Fahrzeugklassen, self).check_login()
 		if self.user_allowed:
+			params_zeit = zeit_in_string.split(':')
+			if(len(params_zeit) < 3):
+				return json.dumps({
+					"success": False,
+					"message": "Format der Qualifikationszeit ist fehlerhaft"
+				})
+
+			zeit_in_millisekunden = (int(params_zeit[0]) * 60 + int(params_zeit[1])) * 1000 + int(params_zeit[2])
+
 			fahrzeugklasse = Fahrzeugklasse.find({"id": id})
 
 			if fahrzeugklasse is None:

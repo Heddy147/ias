@@ -1,0 +1,28 @@
+<h1>Rennen erstellen</h1>
+
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+<p>
+<form id="createRace" class="uk-form" method="POST">
+    <h2>Renndaten</h2>
+    <fieldset data-uk-margin>
+        <input type="text" name="race_bezeichnung" placeholder="Bezeichnung">
+        <input type="text" name="race_beschreibung" placeholder="Beschreibung">
+        <input type="text" name="race_datum" placeholder="Datum">
+    </fieldset>
+
+    <h2>Daten der 1. Station</h2>
+    <fieldset data-uk-margin>
+        <input type="text" name="station_bezeichnung" placeholder="Bezeichnung">
+        <input type="text" name="station_lage" placeholder="Lage (z.B. Entfernung zum Ziel)">
+        <input type="text" name="station_beschreibung" placeholder="Beschreibung (optional)">
+    </fieldset>
+<p>
+    <button class="uk-button" onclick="addStation();">Station hinzufügen</button>
+</p>
+<p>
+    <button class="uk-button" type="submit" >speichern</button>
+</p>
+</form>
+</p>

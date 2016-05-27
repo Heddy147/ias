@@ -79,90 +79,113 @@ LITAPP.Application_cl = Class.create({
 			});
 		}
 
-		if ($('form#createVehicleCategory').length > 0) {
-			$('form#createVehicleCategory').submit(function(e) {
+		if ($('form#createTeam').length > 0) {
+			$('form#createTeam').submit(function(e) {
 				e.preventDefault();
 				var values = {};
 				$(this).find('input').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
-				self.rest.insertVehicleCategory(values);
+				self.rest.insertTeam(values);
 			});
 		}
 
-		if ($('form#editVehicleCategory').length > 0) {
-			$('form#editVehicleCategory').submit(function(e) {
+		if ($('form#editTeam').length > 0) {
+			$('form#editTeam').submit(function(e) {
 				e.preventDefault();
 				var values = {};
 				$(this).find('input').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
-				self.rest.updateVehicleCategory(values);
+				self.rest.updateTeam(values);
 			});
 		}
 
-		if ($('form#createRace').length > 0) {
-			$('form#createRace').submit(function(e) {
+		if ($('form#createVehicle').length > 0) {
+			$('form#createVehicle').submit(function(e) {
 				e.preventDefault();
 				var values = {};
 				$(this).find('input').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
-				self.rest.createRace(values);
+				self.rest.insertVehicle(values);
 			});
 		}
 
-		if ($('form#editRace').length > 0) {
-			$('form#editRace').submit(function(e) {
+		if ($('form#editVehicle').length > 0) {
+			$('form#editVehicle').submit(function(e) {
 				e.preventDefault();
 				var values = {};
 				$(this).find('input').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
-				self.rest.updateRace(values);
+				self.rest.updateVehicle(values);
 			});
 		}
 
-		if ($('form#createStation').length > 0) {
-			$('form#createStation').submit(function(e) {
+		if ($('form#createPerson').length > 0) {
+			$('form#createPerson').submit(function(e) {
 				e.preventDefault();
 				var values = {};
 				$(this).find('input').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
-				self.rest.insertStation(values);
+				self.rest.insertPerson(values);
+			});
+		}
+
+		if ($('form#editPerson').length > 0) {
+			$('form#editPerson').submit(function(e) {
+				e.preventDefault();
+				var values = {};
+				$(this).find('input').each(function() {
+					values[$(this).attr('name')] = $(this).val();
+				});
+				self.rest.updatePerson(values);
 			});
 		}
 	},
 
-	editVehicleCategory: function(element) {
+	editTeam: function(element) {
 		var fId = $(element).data('id');
 
-		this.rest.editVehicleCategory(fId);
+		this.rest.editTeam(fId);
 	},
 
-	deleteVehicleCategory: function(element) {
+	deleteTeam: function(element) {
 		var fId = $(element).data('id');
 
-		this.rest.deleteVehicleCategory(fId);
+		this.rest.deleteTeam(fId);
 	},
 
-	editRace: function(element) {
+	editVehicle: function(element) {
 		var rId = $(element).data('id');
 
-		this.rest.editRace(rId);
+		this.rest.editVehicle(rId);
 	},
 
-	deleteRace: function(element) {
+	deleteVehicle: function(element) {
 		var rId = $(element).data('id');
 
-		this.rest.deleteRace(rId);
+		this.rest.deleteVehicle(rId);
 	},
 
-	addStation: function(element) {
+	editPerson: function(element) {
 		var rId = $(element).data('id');
 
-		this.render_px("rennleiter_createStation", {rennId: rId})
+		this.rest.editPerson(rId);
+	},
+
+	deletePerson: function(element) {
+		var rId = $(element).data('id');
+
+		this.rest.deletePerson(rId);
+	},
+
+	deleteAnmeldung: function(element) {
+		var rId = $(element).data('id');
+
+		this.rest.deleteAnmeldung(rId);
 	},
 
 	setCookie: function(cname, cvalue) {

@@ -40,7 +40,7 @@ function Rest(app) {
 		});
 	};
 
-	this.insertVehicle = function(values) {
+	this.insertVehicleCategory = function(values) {
 		self.ajax(values, "POST", "/api/fahrzeugklassen", function(data) {
 			self.getIndexData();
 		});
@@ -52,7 +52,7 @@ function Rest(app) {
 		});
 	};
 
-	this.updateVehicle = function(values) {
+	this.updateVehicleCategory = function(values) {
 		console.log(values);
 		self.ajax(values, "PUT", "/api/fahrzeugklassen", function(data) {
 			self.getIndexData();
@@ -61,6 +61,81 @@ function Rest(app) {
 
 	this.deleteVehicleCategory = function(id) {
 		self.ajax({id:id}, "DELETE", "/api/fahrzeugklassen?id=" + id, function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.insertVehicle = function(values) {
+		self.ajax(values, "POST", "/api/fahrzeuge", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.editVehicle = function(id) {
+		self.ajax({id:id}, "GET", "/api/fahrzeuge", function(data) {
+			self.app.render_px("editCar", data);
+		});
+	};
+
+	this.updateVehicle = function(values) {
+		console.log(values);
+		self.ajax(values, "PUT", "/api/fahrzeuge", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.deleteVehicle = function(id) {
+		self.ajax({id:id}, "DELETE", "/api/fahrzeuge?id=" + id, function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.insertTeam = function(values) {
+		self.ajax(values, "POST", "/api/team", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.editTeam = function(id) {
+		self.ajax({id:id}, "GET", "/api/team", function(data) {
+			self.app.render_px("editTeam", data);
+		});
+	};
+
+	this.updateTeam = function(values) {
+		console.log(values);
+		self.ajax(values, "PUT", "/api/team", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.deleteTeam = function(id) {
+		self.ajax({id:id}, "DELETE", "/api/team?id=" + id, function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.insertPerson = function(values) {
+		self.ajax(values, "POST", "/api/personen", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.editPerson = function(id) {
+		self.ajax({id:id}, "GET", "/api/personen", function(data) {
+			self.app.render_px("editPerson", data);
+		});
+	};
+
+	this.updatePerson = function(values) {
+		console.log(values);
+		self.ajax(values, "PUT", "/api/personen", function(data) {
+			self.getIndexData();
+		});
+	};
+
+	this.deletePerson = function(id) {
+		self.ajax({id:id}, "DELETE", "/api/personen?id=" + id, function(data) {
 			self.getIndexData();
 		});
 	};

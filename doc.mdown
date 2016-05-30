@@ -1,5 +1,11 @@
 # 1. Einleitung
 
+Die Applikation "Oldtimer-Rennen" dient zur Festhaltung und Verwaltuing von Fahrzeugen, Fahrzeugklassen, Rennen, Anmeldungen, Zeiten (für Qualifiaktion und für Rennen).
+Es können sich Fahrzeugbesitzer selbstständig anmelden.
+Rennleiter können nur durch einen Administrator angelegt werden.
+
+Für weitere Spezifikationen verweisen wir auf die Praktikums-Dokumentation 2.
+
 # 2. Entwurf der Anwendung
 
 ## 2.1 Benutzungsschnittstelle
@@ -38,22 +44,47 @@ Der Besitzer kann die Daten des ausgewählten Fahrzeugs ändern.
 Je nach Status des eigenen Rennens bekommt ein Rennleiter eine Liste seines Rennens angezeigt.
 Wenn der Leiter kein aktuelles Rennen am laufen hat, wird dem Leiter lediglich eine Möglichkeit geboten ein neues Rennen anzulegen.
 
-Sollte ein Rennen vom Rennleiter vorhanden sein, wird eine Liste mit den Anmeldungen zum Rennen angezeigt.
-Hier unterscheidet sich die Liste zwischen Anmeldephase und Qualifikationsphase.
+Sollte ein Rennen vorhanden sein, werden dem Leiter die Stammdaten dieses Rennens angezeigt.
+Je nach Status des Rennens kann er von dieser Ansicht aus in eine Oberfläche gelangen, auf der er die Qualifikations-Ergebnisse oder Renn-Ergebnisse eintragen kann.
 
-In der Anmeldephase hat der Rennleiter die Möglichkeit die Ergebnisse der Qualifikation einzutragen.
-Zusätzlich kann er die Daten inkl. Fahrzeugdaten und Personendaten aller Anmeldungen bearbeiten.
+Außerdem wird dem Leiter ein Verweis für die Anmeldungen am Rennen angezeigt.
+Sollte das Rennen in der Anmeldephase sein, wird ebenfalls ein Verweis zu den Stationen angeboten.
 
-In der Qualifikationsphase kann der Rennleiter die Ergebnisse des Rennens inkl. aller Stationsergebnisse eintragen.
-Danach wird wiederum der Status "kein Rennen vorhanden" eintreten.
+#### Anmeldungen Liste (Leiter)
+In dieser Ansicht wird dem Leiter eine Liste von allen Anmeldungen am Rennen angezeigt.
+Von hier aus kann er die eingetragenen Personen (Fahrer, Beifahrer, Mechaniker) und Fahrzeuge bearbeiten, allerdings **NICHT** löschen.
+Außerdem wird ein Button pro Eintrag *Löschen* angezeigt. Bei Betätigen dieses Buttons wird die Anmeldung aus dem System gelöscht.
 
-Außerdem wird dem Rennleiter die Möglichkeit geboten die Fahrzeugklassen zu pflegen. Dies kann er allerdings nur, wenn er aktuell kein Rennen am laufen hat hat oder das Rennen in der Anmeldephase ist.
+#### Stationen Liste (Leiter)
+Gelangt der Leiter in diese Ansicht, wird eine Liste von allen Stationen angezeigt, die dem Rennen beigefügt worden sind.
+Diese können - analog zu den Anmeldungen - mittels eines Buttons gelöscht werden.
+Außerden gelangt man von hier aus in die Ansicht zum Hinzufügen einer Station.
+Stationen können **NICHT** geändert werden.
+
+#### Station hinzufügen (Leiter)
+In dieser Ansicht können die Stammdaten einer neuen Station eingetragen und gespeichert werden.
+
+#### Fahrzeugklassen hinzufügen (Leiter)
+In dieser Ansicht können die Stammdaten einer neuen Fahrzeugklasse eingetragen und gespeichert werden.
+
+#### Fahrzeugklassen bearbeiten (Leiter)
+In dieser Ansicht können die Stammdaten einer neuen Fahrzeugklasse geändert werden.
+
+#### Qualifikationsergebnisse eintragen (Leiter)
+Es wird eine Liste aller Anmeldungen angezeigt. Dabei sind aber nur die wichtigsten Informationen zu jeder Anmeldung sichtbar.
+Zu jedem Eintrag gibt es 2 Felder: "Zeit", "Qualifiziert".
+Werden diese Felder komplett ausgefüllt und gespeichert, werden die Startplätze für das Rennen automatisch berechnet.
+
+#### Rennergebnisse eintragen (Leiter)
+Analog zu Ansicht "Qualifikationsergebnisse eintragen" werden Anmeldungen mit den wichtigsten Informationen angezeigt.
+Hier gibt es jedoch für jede Station ein "Zeitfeld" und 1 weiteres Feld namens "Stationen in der richtigen Reihenfolge".
+Auch hier werden die Gesamtzeiten und Platzierungen automatisch berechnet.
 
 ### 2.1.2 Zustandsmodell
 
 **HIER KOMMT BILD**
 
-## 2.2 Datenaustausch Client - Server (REST)
+## 2.2 Datenaustausch Client - Server (REST) {#abschnitt_2_2}
 Der Datenaustausch zwischen dem Client und dem Server erfolgt über eine REST-Schnittstelle. Dafür gibt es im Framework "CherryPy" eine bestimmte Funktion, die die HTTP-Request-Methoden (GET, POST, PUT, DELETE) automatisch zu den richtigen Methoden der jeweiligen Klasse führt.
 Jede HTTP-Request-Methode hat also eine eigene Klassenmethode.
 
@@ -119,7 +150,7 @@ Der Datensatz mit der ID "id" wird aktualisiert.
 **DELETE**
 Ein vorhandener Datensatz wird anhand der "id" gelöscht.
 
-Es gibt allerdings eine Ausnahmen: **Login**:
+Es gibt allerdings eine Ausnahme: **Login**:
 
 - Mit der Methode "PUT" meldet man sich im System an.
 - Mit der Methode "DELETE" meldet man sich vom System ab.
@@ -130,9 +161,49 @@ Es gibt allerdings eine Ausnahmen: **Login**:
 
 ## 3.1 Web-Client
 
+Auf der Client-Seite ist der Datenaustausch über Ajax ausschlaggebend. Sowohl Templates als auch Daten werden über Ajax gesendet und empfangen.
+
+Zusätzlich wurden verschiedene Bibliotheken verwendet. Darunter zu finden sind **jQuery**, **uikit**, **TemplateEngine (by Dr. Beims)** und **EventService (by Dr. Beims)**.
+Die verschiedenen Bibiliotheken ermöglichen uns eine einfachere und schneller Implementierung von gleichen JavaScript-Abläufen.
+Zusätzlich stellen einige der Bibliotheken gewisse Funktionen bereit, mit welchen man schnell Templates vorbereiten kann und diese automatisch von der Funktion gerendert und eingefügt werden.
+
+### jQuery
+
+- Bietet fertige Funktionen, welche im Hintergrund native JavaScript-Funktionen ausführt.
+- [Download](https://jquery.com/)
+
+### uikit
+
+- CSS-Framework
+- Grid-View
+- Responsive
+- Bietet viele Klassen, um ein einheitliches Bild zu schaffen
+- [Download](http://getuikit.com/)
+
+### TemplateEngine (by Dr. Beims)
+
+- Bibliothek zum Verwalten, Laden und automatischen Renderns von Templates
+
+### EventService (by Dr. Beims)
+
+- Bibliothek zum Verwalten von Events, auch benutzerdefinierte Events
 
 ## 3.2. Web-Server
 
-### 3.2.1 Bearbeitung der Anfragen
+Der Web-Server wurde mit der Programmierungssprache **Python** geschrieben. Dafür wurde ein Framework namens **CherryPy**, welches mit wenigen Zeilen Code einen komplett funktionstüchtigen Webserver zur verfügung stellt.
+Da die meisten Anfragen über Ajax vom Client gesendet werden und eine REST-Schnittstelle dafür bestens geeignet ist, hilft uns **CherryPy** auch dabei weiter.
+Das Framework ermittelt die HTTP-Request-Methode und führt anhand dieser Methode automatisch die dafür vorgesehene Klassenmethode aus.
+
+Weiteres siehe [Abschnitt 3.2.1](#abschnitt3_2_1)
+
+### 3.2.1 Bearbeitung der Anfragen {#abschnitt3_2_1}
+
+Wie schon erwähnt werden die HTTP-Request-Methoden automatisch vom Framework ermittelt und **CherryPy** führt die dafür vorgesehene Klassenmethode aus.
+Praktischerweise heißen die Klassenmethoden genauso wie die HTTP-Request-Methoden, also *GET*, *POST*, *PUT*, *DELETE*, usw.
+Wir benötigen nur die gerade aufgezählten Methoden.
+
+Was welche Methode macht, wurde bereits in [Abschnitt 2.2](#abschnitt_2_2) ausführlich erläutert.
 
 ### 3.2.2 Speicherung von Daten
+
+Die Daten werden mittels eines *JSON-Strings* in verschiedene Dateien gespeichert. Dafür erhält jeder Datensatz eine eindeutige Kennung (ID), welche für das JSON-Objekt als Key verwendet wird.

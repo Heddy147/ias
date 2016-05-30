@@ -16,15 +16,22 @@ class RestAbstract:
 	]
 
 	allowed_actions_besitzer = [
+		'Login.PUT',
+		'Login.DELETE',
+		'Registrieren.POST',
 		'Fahrzeuge.GET',
 		'Fahrzeuge.POST',
 		'Fahrzeuge.PUT',
 		'Fahrzeuge.DELETE',
+		'Fahrzeugklassen.GET',
 		'Rennen.GET',
-		'Rennanmeldung.GET',
-		'Rennanmeldung.POST',
-		'Rennanmeldung.DELETE',
-		'Personen.GET'
+		'Anmeldungen.GET',
+		'Anmeldungen.POST',
+		'Anmeldungen.DELETE',
+		'Personen.GET',
+		'Personen.POST',
+		'Personen.PUT',
+		'Personen.DELETE'
 	]
 
 	user_allowed = True
@@ -48,5 +55,9 @@ class RestAbstract:
 			called_action = RestAbstract.executed_class + '.' + RestAbstract.executed_method
 			if called_action not in allowed_actions:
 				self.user_allowed = False
+			else:
+				self.user_allowed = True
+		else:
+			self.user_allowed = True
 
 # EOF

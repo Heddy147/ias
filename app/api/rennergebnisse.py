@@ -8,15 +8,22 @@ from app.models.Anmeldung import Anmeldung
 from app.models.Fahrzeugklasse import Fahrzeugklasse
 
 
-class Registrieren(RestAbstract):
+class Rennergebnisse(RestAbstract):
 
 	def POST(
 			self,
-			ergebnisse,
-			rennId
+			**kw
 	):
-		super(Registrieren, self).check_login()
+		super(Rennergebnisse, self).check_login()
 		if self.user_allowed:
+			if "rennId" not in kw:
+				return json.dumps({
+					"success": False,
+					"message": "Rennen nicht vorhanden!"
+				})
+
+			rennId = kw["rennId"]
+
 			rennen = Rennen.find({"id": rennId})
 
 			if rennen is None:
@@ -24,6 +31,14 @@ class Registrieren(RestAbstract):
 					"success": False,
 					"message": "Rennen nicht vorhanden!"
 				})
+
+			if "ergebnisse" not in kw:
+				return json.dumps({
+					"success": False,
+					"message": "Irgendetwas ist schief gelaufen. Versuchen Sie es erneut."
+				})
+
+			ergebnisse = kw["ergebnisse"]
 
 			stationen = Station.find({"rennId": rennId}, 100000)
 			anmeldungen = Anmeldung.find({"rennId": rennId}, 100000)
@@ -36,10 +51,10 @@ class Registrieren(RestAbstract):
 			disquali_erg = []
 
 			for anmeldung in anmeldungen:
-				if anmeldung.data["fahrzeugId"] not in ergebnisse_json:
+				if anmeldung.data["id"] not in ergebnisse_json:
 					return json.dumps({
 						"success": False,
-						"message": "Jedes Fahrzeug muss Zeiten erhalten oder disqualifiziert werden!"
+						"message": "Jedes Fahrzeug muss Zeiten erhalten oder disqualifiziert werden! 1"
 					})
 
 				fahrzeug = Fahrzeug.find({"id": anmeldung.data["fahrzeugId"]})
@@ -51,50 +66,61 @@ class Registrieren(RestAbstract):
 						"message": "Eines der Fahrzeuge ist keiner Klasse angehörig und kann somit nicht am Rennen teilnehmen!"
 					})
 
-				for station in stationen:
-					if int(ergebnisse_json[anmeldung.data["fahrzeugId"]]["disquali"]) == 0:
-						if station.data["id"] not in ergebnisse_json[anmeldung.data["fahrzeugId"]]["stationsErgebnisse"]:
+				if int(ergebnisse_json[anmeldung.data["id"]]["disquali"]) == 0:
+					for station in stationen:
+						if station.data["id"] not in ergebnisse_json[anmeldung.data["id"]]["stationsErgebnisse"]:
 							return json.dumps({
 								"success": False,
-								"message": "Jedes Fahrzeug muss Zeiten erhalten oder disqualifiziert werden!"
+								"message": "Jedes Fahrzeug muss Zeiten erhalten oder disqualifiziert werden! 2"
 							})
 
 						real_erg.append({
 							"fahrzeugId": anmeldung.data["fahrzeugId"],
-							"zeit_in_string": ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_string"],
-							"zeit_in_millisekunden": ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"],
+							"zeit_in_string": ergebnisse_json[anmeldung.data["id"]]["stationsErgebnisse"][station.data["id"]]["zeit_in_string"],
+							"zeit_in_millisekunden": ergebnisse_json[anmeldung.data["id"]]["stationsErgebnisse"][station.data["id"]]["zeit_in_millisekunden"],
 							"stationId": station.data["id"]
 						})
 
-						if anmeldung.data["fahrzeugId"] not in renn_erg_asso:
-							renn_erg_asso[anmeldung.data["fahrzeugId"]] = {
-								"zeit_in_millisekunden": ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"]
+						if anmeldung.data["id"] not in renn_erg_asso:
+							renn_erg_asso[anmeldung.data["id"]] = {
+								"zeit_in_millisekunden": int(ergebnisse_json[anmeldung.data["id"]]["stationsErgebnisse"][station.data["id"]]["zeit_in_millisekunden"]),
+								"fahrzeugId": anmeldung.data["fahrzeugId"]
 							}
 						else:
-							renn_erg_asso[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"] += ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"]
-					else:
-						disquali_erg.append({
-							"fahrzeugId": anmeldung.data["fahrzeugId"]
-						})
-						break
+							renn_erg_asso[anmeldung.data["id"]]["zeit_in_millisekunden"] += int(ergebnisse_json[anmeldung.data["id"]]["stationsErgebnisse"][station.data["id"]]["zeit_in_millisekunden"])
+					renn_erg_asso[anmeldung.data["id"]]["stationen_ok"] = int(ergebnisse_json[anmeldung.data["id"]]["stationen_ok"])
+				else:
+					disquali_erg.append({
+						"fahrzeugId": anmeldung.data["fahrzeugId"]
+					})
+					break
 
 			for fId in renn_erg_asso:
-				if int(ergebnisse_json[anmeldung.data["fahrzeugId"]]["stationen_ok"]) is 0:
+				if int(renn_erg_asso[fId]["stationen_ok"]) is 0:
 					renn_erg_not_correct.append({
-						"fahrzeugId": fId
+						"fahrzeugId": renn_erg_asso[fId]["fahrzeugId"]
 					})
 				else:
-					minuten = renn_erg_asso[fId]["zeit_in_millisekunden"] / 60
-					rest = renn_erg_asso[fId]["zeit_in_millisekunden"] - minuten
-					if rest > 9999:
-						sekunden = rest[:2]
-					else:
-						sekunden = rest[:1]
+					minuten = int(renn_erg_asso[fId]["zeit_in_millisekunden"] / 60000)
+					rest = renn_erg_asso[fId]["zeit_in_millisekunden"] - (minuten * 60000)
 
-					millisekunden = rest[-3:]
+					if rest > 9999:
+						sekunden = str(rest)[:2]
+					else:
+						sekunden = str(rest)[:1]
+
+					millisekunden = str(rest)[-3:]
+					minuten = str(minuten)
+
+					if len(minuten) < 2:
+						minuten = "0" + minuten
+
+					if len(sekunden) < 2:
+						sekunden = "0" + sekunden
+
 					renn_erg.append({
-						"fahrzeugId": fId,
-						"zeit_in_string": minuten + ":" + sekunden + ":" + millisekunden,
+						"fahrzeugId": renn_erg_asso[fId]["fahrzeugId"],
+						"zeit_in_string": str(minuten) + ":" + str(sekunden) + ":" + str(millisekunden),
 						"zeit_in_millisekunden": renn_erg_asso[fId]["zeit_in_millisekunden"]
 					})
 
@@ -130,6 +156,9 @@ class Registrieren(RestAbstract):
 				rennergebnis.data["platzierung"] = 999
 				rennergebnis.data["stationen_ok"] = 0
 				rennergebnis.save()
+
+			rennen.data["beendet"] = 1
+			rennen.save()
 
 			return json.dumps({
 				"success": True

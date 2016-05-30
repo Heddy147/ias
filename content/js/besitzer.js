@@ -15,8 +15,7 @@ LITAPP.Application_cl = Class.create({
 						LITAPP.tm_o = new TELIB.TemplateManager_cl();
 						break;
 					case 'templates.loaded':
-						self_opl.rest.getIndexData();
-//						self_opl.render_px('rennleiter_index', {});
+						self_opl.rest.getBesitzerIndexData();
 						break;
 					default:
 						console.warning('[Application_cl] unbekannte app-Notification: '+data_apl[0]);
@@ -41,7 +40,7 @@ LITAPP.Application_cl = Class.create({
 
 			switch(action) {
 				case 'page.switch.index':
-					self.rest.getIndexData();
+					self.rest.getBesitzerIndexData();
 					break;
 				case 'page.switch':
 					var templateName = $(this).data('template-name');
@@ -56,28 +55,6 @@ LITAPP.Application_cl = Class.create({
 					break;
 			}
 		});
-
-		if ($('form#login').length > 0) {
-			$('form#login').submit(function(e) {
-				e.preventDefault();
-				var values = {};
-				$(this).find('input').each(function() {
-					values[$(this).attr('name')] = $(this).val();
-				});
-				self.rest.doLogin(values);
-			});
-		}
-
-		if ($('form#registrieren').length > 0) {
-			$('form#registrieren').submit(function(e) {
-				e.preventDefault();
-				var values = {};
-				$(this).find('input').each(function() {
-					values[$(this).attr('name')] = $(this).val();
-				});
-				self.rest.doRegister(values);
-			});
-		}
 
 		if ($('form#createTeam').length > 0) {
 			$('form#createTeam').submit(function(e) {
@@ -105,9 +82,10 @@ LITAPP.Application_cl = Class.create({
 			$('form#createVehicle').submit(function(e) {
 				e.preventDefault();
 				var values = {};
-				$(this).find('input').each(function() {
+				$(this).find('input,select').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
+
 				self.rest.insertVehicle(values);
 			});
 		}
@@ -116,7 +94,7 @@ LITAPP.Application_cl = Class.create({
 			$('form#editVehicle').submit(function(e) {
 				e.preventDefault();
 				var values = {};
-				$(this).find('input').each(function() {
+				$(this).find('input,select').each(function() {
 					values[$(this).attr('name')] = $(this).val();
 				});
 				self.rest.updateVehicle(values);
@@ -144,24 +122,27 @@ LITAPP.Application_cl = Class.create({
 				self.rest.updatePerson(values);
 			});
 		}
+
+		if ($('form#createAnmeldung').length > 0) {
+			$('form#createAnmeldung').submit(function(e) {
+				e.preventDefault();
+				var values = {};
+				$(this).find('input,select').each(function() {
+					values[$(this).attr('name')] = $(this).val();
+				});
+				self.rest.insertAnmeldung(values);
+			});
+		}
 	},
 
-	editTeam: function(element) {
-		var fId = $(element).data('id');
-
-		this.rest.editTeam(fId);
-	},
-
-	deleteTeam: function(element) {
-		var fId = $(element).data('id');
-
-		this.rest.deleteTeam(fId);
+	createVehicle: function(element) {
+		this.rest.loadDataForVehicle();
 	},
 
 	editVehicle: function(element) {
-		var rId = $(element).data('id');
+		var vId = $(element).data('id');
 
-		this.rest.editVehicle(rId);
+		this.rest.editVehicle(vId);
 	},
 
 	deleteVehicle: function(element) {
@@ -177,15 +158,23 @@ LITAPP.Application_cl = Class.create({
 	},
 
 	deletePerson: function(element) {
-		var rId = $(element).data('id');
+		var pId = $(element).data('id');
 
-		this.rest.deletePerson(rId);
+		this.rest.deletePerson(pId);
+	},
+
+	createAnmeldung: function(element) {
+		this.rest.createAnmeldung();
 	},
 
 	deleteAnmeldung: function(element) {
-		var rId = $(element).data('id');
+		var aId = $(element).data('id');
 
-		this.rest.deleteAnmeldung(rId);
+		this.rest.deleteAnmeldung(aId);
+	},
+
+	logout: function(element) {
+		this.rest.logout();
 	},
 
 	setCookie: function(cname, cvalue) {

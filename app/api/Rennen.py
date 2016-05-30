@@ -3,6 +3,8 @@ from app.abstracts.rest import RestAbstract
 from app.abstracts.model import ModelAbstract
 from app.models.Rennen import Rennen as RennenModel
 from app.models.User import User
+from app.models.Anmeldung import Anmeldung
+from app.models.Station import Station
 
 class Rennen(RestAbstract):
 	def GET(self, id=None):
@@ -10,14 +12,14 @@ class Rennen(RestAbstract):
 		if self.user_allowed:
 			if User.logged_in_user.data["rolle"] == "leiter":
 				if id is None:
-					rennen = RennenModel.find({"leiterId": User.logged_in_user.data["id"]})
+					rennen = RennenModel.find({"leitungId": User.logged_in_user.data["id"], "beendet": 0})
 				else:
-					rennen = RennenModel.find({"id": id, "leiterId": User.logged_in_user.data["id"]})
+					rennen = RennenModel.find({"id": id, "leitungId": User.logged_in_user.data["id"], "beendet": 0})
 			else:
 				if id is None:
-					rennen = RennenModel.find(None, 100000)
+					rennen = RennenModel.find({"beendet": 0}, 100000)
 				else:
-					rennen = RennenModel.find({"id": id})
+					rennen = RennenModel.find({"id": id, "beendet": 0})
 
 			return json.dumps({
 				"success": True,
@@ -107,6 +109,14 @@ class Rennen(RestAbstract):
 					"success": False,
 					"messages": "Fahrzeugklasse nicht vorhanden!"
 				})
+
+			anmeldungen = Anmeldung.find({"rennId": rennen.data["id"]}, 10000)
+			for a in anmeldungen:
+				a.delete()
+
+			stationen = Station.find({"rennId": rennen.data["id"]}, 10000)
+			for s in stationen:
+				s.delete()
 
 			rennen.delete()
 

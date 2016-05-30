@@ -1,3 +1,7 @@
+body {
+	margin: 5px;
+}
+
 table {
 	width: 100%;
 
@@ -13,55 +17,10 @@ table th.id {
 	width: 120px;
 }
 
-table tr:nth-child(odd) td {
-	//background-color: rgb(180,180,180);
+form#insertRennergebnisse .stationen_input {
+	margin-top: 5px;
 }
 
-table tr:nth-child(even) td {
-	//background-color: rgb(200,200,200);
-}
-
-table tr.selected-thema td {
-	background-color: rgb(120,120,120);
-	color: white;
-}
-
-table tr.selected-diskussion td {
-	background-color: rgb(120,120,120);
-	color: white;
-}
-
-table tr.selected-user td {
-	background-color: red;
-	color: white;
-}
-
-div.beitrag {
-	margin-bottom: 20px;
-	background-color: yellow;
-}
-
-div.beitrag.selected-beitrag {
-	background-color: red;
-	color: white;
-}
-
-div.beitrag div.beitrags-kopf {
-	border-bottom: 1px solid grey;
-	padding: 5px;
-	background: lightgrey;
-	color: black;
-}
-
-div.beitrag div.beitrags-body {
-	padding: 10px;
-}
-
-p.break {
-	padding: 0;
-	margin: 0;
-}
-
-p.error {
-	color: #AA3333;
+.stationen_input_fields {
+	display: none;
 }

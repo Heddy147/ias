@@ -45,7 +45,7 @@ def main():
 		}
 	})
 
-	cherrypy.tree.mount(anmeldungen.Anmeldungen(), '/api/anmeldung', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(anmeldungen.Anmeldungen(), '/api/anmeldungen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(fahrzeuge.Fahrzeuge(), '/api/fahrzeuge', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(fahrzeugklassen.Fahrzeugklassen(), '/api/fahrzeugklassen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(login.Login(), '/api/login', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
@@ -53,7 +53,7 @@ def main():
 	cherrypy.tree.mount(qualiergebnisse.Qualiergebnisse(), '/api/qualiergebnisse', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(registrieren.Registrieren(), '/api/registrieren', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(rennen.Rennen(), '/api/rennen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
-	cherrypy.tree.mount(rennergebnisse.Rennergebnis(), '/api/rennergebnisse', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
+	cherrypy.tree.mount(rennergebnisse.Rennergebnisse(), '/api/rennergebnisse', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 	cherrypy.tree.mount(stationen.Stationen(), '/api/stationen', {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
 
 	cherrypy.tree.mount(template.Template(), '/template', {

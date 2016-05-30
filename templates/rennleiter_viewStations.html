@@ -1,0 +1,36 @@
+<h1>Stationen einsehen</h1>
+
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+<p>
+    <button class="uk-button" data-id="#context.rennId#" data-action="function" data-function="addStation">Station hinzufügen</button>
+</p>
+@console.log(context)@
+<p>
+    <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+        <tr>
+            <th>Bezeichnung</th>
+            <th>Lage</th>
+            <th>Beschreibung</th>
+            <th>&nbsp;</th>
+        </tr>
+
+        @if context.stationen.length == 0@
+        <tr class="vehicleCategory">
+            <td colspan="4">Keine Stationen eingetragen!</td>
+        </tr>
+        @else@
+        @for s in context.stationen@
+        <tr class="vehicleCategory">
+            <td>#context.stationen[s].bezeichnung#</td>
+            <td>#context.stationen[s].lage#</td>
+            <td>#context.stationen[s].beschreibung#</td>
+            <td>
+                <button class="uk-button" data-action="function" data-function="deleteStation" data-id="#context.stationen[s].id#">Löschen</button>
+            </td>
+        </tr>
+        @endfor@
+        @endif@
+    </table>
+</p>

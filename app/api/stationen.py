@@ -105,13 +105,23 @@ class Stationen(RestAbstract):
 			if station is None:
 				return json.dumps({
 					"success": False,
-					"messages": "Fahrzeugklasse nicht vorhanden!"
+					"message": "Station nicht vorhanden!"
 				})
 
+			stationen = Station.find({"rennId": station.data["rennId"]}, 10000)
+
+			if len(stationen) < 2:
+				return json.dumps({
+					"success": False,
+					"message": "Es muss mindestens 1 Station eingetragen sein!"
+				})
+
+			old_data = station.data
 			station.delete()
 
 			return json.dumps({
-				"success": True
+				"success": True,
+				"data": old_data
 			})
 
 		return json.dumps({

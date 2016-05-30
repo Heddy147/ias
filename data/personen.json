@@ -1,1 +1,1 @@
-{}
+{"2": {"mechanikerId": "1", "vorname": "Max", "benutzerId": 2, "typ": "2", "besitzerId": 2, "leistung": "450ps", "nachname": "Musterling", "marke": "Z4", "baujahr": "2014", "kennzeichen": "KR-DD-548", "fuehrerschein": "A", "hubraum": "700ccm", "beifahrerId": "1", "beschreibung": "Schnell!!!", "id": "2", "fahrerId": "1"}, "1": {"id": "1", "vorname": "David", "besitzerId": 2, "fuehrerschein": "AB", "nachname": "Riemann"}}

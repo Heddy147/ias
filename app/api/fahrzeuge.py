@@ -5,6 +5,7 @@ from app.models.Fahrzeug import Fahrzeug
 from app.models.Fahrzeugklasse import Fahrzeugklasse
 from app.models.User import User
 from app.models.Person import Person
+from app.models.Anmeldung import Anmeldung
 
 
 class Fahrzeuge(RestAbstract):
@@ -48,7 +49,7 @@ class Fahrzeuge(RestAbstract):
 		super(Fahrzeuge, self).check_login()
 		if self.user_allowed:
 			fahrzeug = Fahrzeug()
-			fahrzeug.data["besitzer"] = User.logged_in_user.data["id"]
+			fahrzeug.data["benutzerId"] = User.logged_in_user.data["id"]
 			fahrzeug.data["marke"] = marke
 			fahrzeug.data["baujahr"] = baujahr
 			fahrzeug.data["hubraum"] = hubraum
@@ -58,7 +59,7 @@ class Fahrzeuge(RestAbstract):
 
 			### Müssen noch auf Korrektheit ueberprueft werden
 			fahrzeugklasse = Fahrzeugklasse.find({"id": typ})
-			if fahrzeugklasse is None:
+			if fahrzeugklasse is None and len(typ) > 0:
 				return json.dumps({
 					"success": False,
 					"message": "Fahrzeugklasse existiert nicht!"
@@ -66,7 +67,7 @@ class Fahrzeuge(RestAbstract):
 			fahrzeug.data["typ"] = typ
 
 			fahrer = Person.find({"id": fahrerId})
-			if fahrer is None:
+			if fahrer is None and len(fahrerId) > 0:
 				return json.dumps({
 					"success": False,
 					"message": "Fahrer existiert nicht!"
@@ -74,7 +75,7 @@ class Fahrzeuge(RestAbstract):
 			fahrzeug.data["fahrerId"] = fahrerId
 
 			beifahrer = Person.find({"id": beifahrerId})
-			if beifahrer is None:
+			if beifahrer is None and len(beifahrerId) > 0:
 				return json.dumps({
 					"success": False,
 					"message": "Beifahrer existiert nicht!"
@@ -82,7 +83,7 @@ class Fahrzeuge(RestAbstract):
 			fahrzeug.data["beifahrerId"] = beifahrerId
 
 			mechaniker = Person.find({"id": mechanikerId})
-			if mechaniker is None:
+			if mechaniker is None and len(mechanikerId) > 0:
 				return json.dumps({
 					"success": False,
 					"message": "Mechaniker existiert nicht!"
@@ -196,6 +197,10 @@ class Fahrzeuge(RestAbstract):
 					"success": False,
 					"messages": "Fahrzeug nicht vorhanden!"
 				})
+
+			anmeldungen = Anmeldung.find({"fahrzeugId": fahrzeug.data["id"]}, 10000)
+			for a in anmeldungen:
+				a.delete()
 
 			fahrzeug.delete()
 

@@ -32,4 +32,16 @@ class User(ModelAbstract):
 		else:
 			User.logged_in_user = None
 
+	@staticmethod
+	def logout():
+		cookie = cherrypy.request.cookie
+		if "user" in cookie:
+			cherrypy.response.cookie["user"] = ''
+			cherrypy.response.cookie["user"]['expires'] = 0
+			cherrypy.response.cookie['user']['path'] = '/'
+			cherrypy.response.cookie['user']['max-age'] = -1
+			cherrypy.response.cookie['user']['version'] = 1
+
+			User.logged_in_user = None
+
 # EOF

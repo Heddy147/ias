@@ -4,6 +4,7 @@ from app.abstracts.model import ModelAbstract
 from app.models.Anmeldung import Anmeldung
 from app.models.Rennen import Rennen
 from app.models.Fahrzeug import Fahrzeug
+from app.models.User import User
 
 class Anmeldungen(RestAbstract):
 	def GET(self, id=None, rennId=None, fahrzeugId=None):
@@ -19,12 +20,14 @@ class Anmeldungen(RestAbstract):
 			if fahrzeugId is not None:
 				conditions["fahrzeugId"] = fahrzeugId
 
+			if User.logged_in_user.data["rolle"] != "leitung":
+				conditions["benutzerId"] = User.logged_in_user.data["id"]
 
 			anmeldung = Anmeldung.find(conditions, 100000)
 
 			return json.dumps({
 				"success": True,
-				"fahrzeugklassen": ModelAbstract.get_data_of_objects(anmeldung)
+				"anmeldungen": ModelAbstract.get_data_of_objects(anmeldung)
 			})
 
 		return json.dumps({
@@ -51,10 +54,17 @@ class Anmeldungen(RestAbstract):
 					"success": False,
 					"message": "Fahrzeug nicht gefunden!"
 				})
+			existingAnmeldung = Anmeldung.find({"fahrzeugId": fahrzeug.data["id"], "rennId": rennen.data["id"]})
+			if existingAnmeldung is not None:
+				return json.dumps({
+					"success": False,
+					"message": "Sie haben sich mit diesem Fahrzeug schon an diesem Rennen angemeldet!"
+				})
 
 			anmeldung = Anmeldung()
 			anmeldung.data["rennId"] = rennId
 			anmeldung.data["fahrzeugId"] = fahrzeugId
+			anmeldung.data["benutzerId"] = User.logged_in_user.data["id"]
 
 			if anmeldung.save():
 				return json.dumps({

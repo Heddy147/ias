@@ -59,48 +59,49 @@ Jede HTTP-Request-Methode hat also eine eigene Klassenmethode.
 
 Folgende Methoden für verschiedene Datensätze werden unterstützt:
 
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-| Datensatz 		   | Methode 			   | Benötigte Parameter 														|
-+======================+=======================+============================================================================+
-| Anmeldungen 		   | GET, POST, PUT, DELETE| GET: [id], [rennId], [fahrzeugId];											|
-|					   |					   | POST: rennId, fahrzeugId;													|
-|					   |					   | PUT: id, rennId, fahrzeugId;												|
-|					   |					   | DELETE: id 																|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-| Fahrzeug 			   | GET, POST, PUT, DELETE| GET: [id];																	|
-|					   |					   |POST: marke, typ, baujahr, hubraum, leistung, beschreibung,					|
-|					   |					   |	  kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
-|					   |					   |PUT: id, marke, typ, baujahr, hubraum, leistung, beschreibung,				|
-|					   |					   |	 kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
-|					   |					   |DELETE: id 																	|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Fahrzeugklasse 	   | GET, POST, PUT, DELETE|GET: [id];																	|
-|					   |					   |POST: bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;		|
-|					   |					   |PUT: id, bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;	|
-|					   |					   |DELETE: id 																	|
-|Login 				   | PUT				   |PUT: benutzename, passwort 													|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Person 			   | GET, POST, PUT, DELETE|GET: [id]; 																	|
-|					   |					   |POST: vorname, nachname, fuehrerschein; 									|
-|					   |					   |PUT: id, vorname, nachname, fuehrerschein; 									|
-|					   |					   |DELETE: id 																	|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Qualifikationsergebnis| POST				   |POST: ergebnisse, rennId													|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Registrierung 		   | POST				   |POST: benutzername, passwort												|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Rennen 			   | GET, POST, PUT, DELETE|GET: [id]; 																	|
-|					   |					   |POST: bezeichnung, beschreibung, datum;										|
-|					   |					   |PUT: id, bezeichnung, beschreibung, datum;									|
-|					   |					   |DELETE: id 																	|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Rennergebnis		   | POST				   |POST: ergebnisse, rennId													|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
-|Station 			   | GET, POST, PUT, DELETE|GET: [id], [rennId]; 														|
-|					   |					   |POST: bezeichnung, lage, beschreibung, rennId;								|
-|					   |					   |PUT: id, bezeichnung, lage, beschreibung, rennId;							|
-|					   |					   |DELETE: id 																	|
-+----------------------+-----------------------+----------------------------------------------------------------------------+
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+| Datensatz 		   | Methode 			   | URL					| Benötigte Parameter 															|
++======================+=======================+========================+===============================================================================+
+| Anmeldung 		   | GET, POST, PUT, DELETE| /api/anmeldungen		| GET: [id], [rennId], [fahrzeugId];											|
+|					   |					   | 						| POST: rennId, fahrzeugId;														|
+|					   |					   | 						| PUT: id, rennId, fahrzeugId;													|
+|					   |					   | 						| DELETE: id 																	|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+| Fahrzeug 			   | GET, POST, PUT, DELETE| /api/fahrzeuge			| GET: [id];																	|
+|					   |					   | 						| POST: marke, typ, baujahr, hubraum, leistung, beschreibung,					|
+|					   |					   | 						|	    kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
+|					   |					   | 						| PUT: id, marke, typ, baujahr, hubraum, leistung, beschreibung,				|
+|					   |					   | 						|	   kennzeichen, fahrerId, beifahrerId, mechanikerId;						|
+|					   |					   | 						| DELETE: id 																	|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Fahrzeugklasse 	   | GET, POST, PUT, DELETE| /api/fahrzeugeklassen	| GET: [id];																	|
+|					   |					   | 						| POST: bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;		|
+|					   |					   | 						| PUT: id, bezeichnung, beschreibung, zeit_in_millisekunden, zeit_in_string;	|
+|					   |					   | 						| DELETE: id 																	|
+|Login 				   | PUT, DELETE		   | 						| PUT: benutzename, passwort													|
+|					   | 					   | 						| DELETE:																		|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Person 			   | GET, POST, PUT, DELETE| /api/personen			| GET: [id]; 																	|
+|					   |					   | 						| POST: vorname, nachname, fuehrerschein; 										|
+|					   |					   | 						| PUT: id, vorname, nachname, fuehrerschein; 									|
+|					   |					   | 						| DELETE: id 																	|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Qualifikationsergebnis| POST				   | /api/qualiergebnisse	| POST: ergebnisse, rennId														|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Registrierung 		   | POST				   | /api/registrieren		| POST: benutzername, passwort													|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Rennen 			   | GET, POST, PUT, DELETE| /api/rennen			| GET: [id]; 																	|
+|					   |					   | 						| POST: bezeichnung, beschreibung, datum;										|
+|					   |					   | 						| PUT: id, bezeichnung, beschreibung, datum;									|
+|					   |					   | 						| DELETE: id 																	|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Rennergebnis		   | POST				   | /api/rennergebnisse	| POST: ergebnisse, rennId														|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
+|Station 			   | GET, POST, PUT, DELETE| /api/stationen			| GET: [id], [rennId]; 															|
+|					   |					   | 						| POST: bezeichnung, lage, beschreibung, rennId;								|
+|					   |					   | 						| PUT: id, bezeichnung, lage, beschreibung, rennId;								|
+|					   |					   | 						| DELETE: id 																	|
++----------------------+-----------------------+------------------------+-------------------------------------------------------------------------------+
 
 Folgende Aktionen werden durch die verschiedenen HTTP-Request-Methoden ausgeführt:
 
@@ -117,6 +118,12 @@ Der Datensatz mit der ID "id" wird aktualisiert.
 
 **DELETE**
 Ein vorhandener Datensatz wird anhand der "id" gelöscht.
+
+Es gibt allerdings eine Ausnahmen: **Login**:
+
+- Mit der Methode "PUT" meldet man sich im System an.
+- Mit der Methode "DELETE" meldet man sich vom System ab.
+
 
 
 # 3. Implementierung der Anwendung

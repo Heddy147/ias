@@ -1,4 +1,4 @@
-<a class="uk-button" href="/login/logout">Ausloggen</a>
+<button class="uk-button" data-action="function" data-function="logout">Ausloggen</button>
 
 <h1>Alle Fahrzeugklassen</h1>
 
@@ -40,9 +40,20 @@
 @if context.rennen.length == 0@
 <button class="uk-button" data-action="page.switch" data-template-name="rennleiter_createRace">Rennen erstellen</button>
 @else@
-<button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="editRace">Rennen bearbeiten</button>
-<button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="deleteRace">Rennen löschen</button>
-<button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="addStation">Station hinzufügen</button>
+<p>
+    @if context.rennen[0].quali_eingetragen == true@
+    <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="insertRennErgebnisse">Renn-Ergebnisse eintragen</button>
+    @else@
+    <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="insertQualiErgebnisse">Qualifying-Ergebnisse eintragen</button>
+    @endif@
+    <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="editAnmeldungen">Anmeldungen einsehen</button>
+</p>
+@if context.rennen[0].quali_eingetragen == false@
+<hr>
+<p>
+    <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="viewStations">Stationen einsehen</button>
+</p>
+@endif@
 @endif@
 
 <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
@@ -51,6 +62,7 @@
         <th>Beschreibung</th>
         <th>Datum</th>
         <th>Leitung</th>
+        <th>&nbsp;</th>
     </tr>
 
     @if context.rennen.length == 0@
@@ -58,11 +70,17 @@
         <td colspan="4">Kein Rennen eingetragen!</td>
     </tr>
     @else@
-    <tr class="vehicleCategory" onclick="selectVehicleCategory(this);">
+    <tr class="vehicleCategory">
         <td>#context.rennen[0].bezeichnung#</td>
         <td>#context.rennen[0].beschreibung#</td>
         <td>#context.rennen[0].datum#</td>
         <td>#context.rennen[0].leiter.benutzername#</td>
+        <td>
+            @if context.rennen[0].quali_eingetragen == false@
+            <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="editRace">Rennen bearbeiten</button>
+            @endif@
+            <button class="uk-button" data-id="#context.rennen[0].id#" data-action="function" data-function="deleteRace">Rennen löschen</button>
+        </td>
     </tr>
     @endif@
 </table>

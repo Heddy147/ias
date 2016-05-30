@@ -11,11 +11,18 @@ class Qualiergebnisse(RestAbstract):
 
 	def POST(
 			self,
-			ergebnisse,
-			rennId
+			**kw
 	):
 		super(Qualiergebnisse, self).check_login()
 		if self.user_allowed:
+			if "rennId" not in kw:
+				return json.dumps({
+					"success": False,
+					"message": "Rennen nicht vorhanden!"
+				})
+
+			rennId = kw["rennId"]
+
 			rennen = Rennen.find({"id": rennId})
 
 			if rennen is None:
@@ -24,14 +31,17 @@ class Qualiergebnisse(RestAbstract):
 					"message": "Rennen nicht vorhanden!"
 				})
 
-			ergebnisse_json = json.loads(ergebnisse)
 			real_erg = []
 			not_qualified_erg = []
 
 			anmeldungen = Anmeldung.find({"rennId": rennId}, 100000)
 
 			for anmeldung in anmeldungen:
-				if anmeldung.data["fahrzeugId"] not in ergebnisse_json:
+				status_key = "ergebnisse[" + anmeldung.data["id"] + "][status]"
+				zeit_in_string_key = "ergebnisse[" + anmeldung.data["id"] + "][zeit_in_string]"
+				zeit_in_millisekunden_key = "ergebnisse[" + anmeldung.data["id"] + "][zeit_in_millisekunden]"
+
+				if status_key not in kw or zeit_in_string_key not in kw or zeit_in_millisekunden_key not in kw:
 					return json.dumps({
 						"success": False,
 						"message": "Jedes Fahrzeug muss eine Zeit erhalten oder disqualifiziert werden!"
@@ -46,9 +56,9 @@ class Qualiergebnisse(RestAbstract):
 						"message": "Eines der Fahrzeuge ist keiner Klasse angehörig und kann somit nicht am Rennen teilnehmen!"
 					})
 
-				status = ergebnisse_json[anmeldung.data["fahrzeugId"]]["status"]
+				status = kw[status_key]
 				if int(status) is not 2:
-					if ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"] <= fahrzeugklasse.data["zeit_in_millisekunden"]:
+					if int(kw[zeit_in_millisekunden_key]) <= int(fahrzeugklasse.data["zeit_in_millisekunden"]):
 						status = 1
 					else:
 						status = 0
@@ -61,8 +71,8 @@ class Qualiergebnisse(RestAbstract):
 				else:
 					real_erg.append({
 						"fahrzeugId": anmeldung.data["fahrzeugId"],
-						"zeit_in_string": ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_string"],
-						"zeit_in_millisekunden": ergebnisse_json[anmeldung.data["fahrzeugId"]]["zeit_in_millisekunden"],
+						"zeit_in_string": kw[zeit_in_string_key],
+						"zeit_in_millisekunden": kw[zeit_in_millisekunden_key],
 						"status": status,
 						"anmeldeId": anmeldung.data["id"]
 					})
@@ -72,6 +82,7 @@ class Qualiergebnisse(RestAbstract):
 			for ergebnis in sorted_erg:
 				anmeldung = Anmeldung.find({"id": ergebnis["anmeldeId"]})
 				anmeldung.data["quali_platzierung"] = platz
+				anmeldung.save()
 
 				qualiergebnis = Qualiergebnis()
 				qualiergebnis.data["zeit"] = ergebnis["zeit_in_string"]
@@ -85,9 +96,9 @@ class Qualiergebnisse(RestAbstract):
 			for nq_ergebnis in not_qualified_erg:
 				qualiergebnis = Qualiergebnis()
 				qualiergebnis.data["zeit"] = "60:60:999"
-				qualiergebnis.data["status"] = ergebnis["status"]
+				qualiergebnis.data["status"] = nq_ergebnis["status"]
 				qualiergebnis.data["rennId"] = rennId
-				qualiergebnis.data["fahrzeugId"] = ergebnis["fahrzeugId"]
+				qualiergebnis.data["fahrzeugId"] = nq_ergebnis["fahrzeugId"]
 				qualiergebnis.data["platzierung"] = 999
 				qualiergebnis.save()
 

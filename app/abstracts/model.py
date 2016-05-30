@@ -7,9 +7,11 @@ class ModelAbstract:
 
 	required_fields = []
 	required_fields_empty = []
+	real_fields = []
 
 	def __init__(self):
 		self.data["id"] = 0
+		self.required_fields_empty = []
 
 	@classmethod
 	def find(cls, conditions=None, count=1):
@@ -44,6 +46,7 @@ class ModelAbstract:
 			if is_okay:
 				model = cls()
 				model.data = all_data[ad]
+				model.after_find()
 				if int(count) is 1:
 					return model
 
@@ -55,7 +58,6 @@ class ModelAbstract:
 				counted += 1
 
 		if int(count) == 1:
-			print("count 1 not found")
 			return None
 
 		return found_data
@@ -74,7 +76,14 @@ class ModelAbstract:
 			new_id = ModelAbstract.get_last_id(all_data)
 			self.data["id"] = str(new_id)
 
-		all_data[str(self.data["id"])] = self.data
+		real_data = {}
+		if len(self.real_fields) > 0:
+			for field in self.real_fields:
+				real_data[field] = self.data[field]
+		else:
+			real_data = self.data
+
+		all_data[str(self.data["id"])] = real_data
 
 		self.save_all(all_data)
 

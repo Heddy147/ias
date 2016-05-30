@@ -1,1 +1,1 @@
-{"2": {"rennId": "1", "bezeichnung": "R_Station2", "id": "2", "beschreibung": "R_Station2", "lage": "Dort 2"}, "1": {"leitungId": 1, "beschreibung": "R_Station1", "bezeichnung": "R_Station1", "beendet": false, "rennId": "1", "datum": "01.01.1970", "id": "1", "lage": "Dort 1"}}
+{"1": {"id": "1", "lage": "Dort 1", "leitungId": 1, "datum": "01.06.2016", "beschreibung": "Station 1", "rennId": "1", "bezeichnung": "Station 1", "beendet": false}}

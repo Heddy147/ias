@@ -1,48 +1,52 @@
-<%!
-    import cherrypy
-%>
-<html lang="de">
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>Themen</title>
-    <link rel="stylesheet" type="text/css" href="/css/uikit.min.css" />
-    <link rel="stylesheet" type="text/css" href="/css/main.css" />
-    <script src="/js/jquery.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/rennleiter.js"></script>
-    <script src="/js/uikit.min.js"></script>
-</head>
-<body>
+<h1>Qualifying-Ergebnisse eintragen</h1>
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
 
-    <a class="uk-button" href="/login/logout">Ausloggen</a>
-
-    <h1>Alle Teilnehmer</h1>
-
-    <button class="uk-button" onclick="deleteRegisterForRace();" disabled>Anmeldung löschen</button>
-    <button class="uk-button" onclick="detailsRegisterForRace();" disabled>Details der Anmeldung</button>
-
+<form class="uk-form" id="insertRennergebnisse" method="POST" action="/api/qualiergebnisse">
+    <input type="hidden" name="rennId" value="#context.rennId#" />
     <table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
         <tr>
-            <th class="id">Rennen-ID</th>
-            <th>Bezeichnung</th>
-            <th>Beschreibung</th>
-            <th>Datum</th>
-            <th>Leitung</th>
-            <th>Fahrzeug-ID</th>
+            <th>Fahrer</th>
+            <th>Beifahrer</th>
+            <th>Mechaniker</th>
+            <th>Fahrzeug</th>
             <th>Ergebnis (Zeit)</th>
+            <th>Stationen korrekt erreicht?</th>
+            <th>Qualifiziert?</th>
         </tr>
-        % for anmeldung in anmeldungen:
-        <tr class="anmeldung" onclick="selectAnmeldung(this);" data-id="${anmeldung[0]}">
-            <td>${anmeldung[0]}</td>
-            <td><p></p></td>
-            <td><p></p></td>
-            <td><p></p></td>
-            <td><p></p></td>
-            <td><p></p></td>
-            <td><p>#zeitGesamt#</p></td>
+        @for a in context.anmeldungen@
+        <tr>
+            <td>#context.anmeldungen[a].fahrer.vorname# #context.anmeldungen[a].fahrer.nachname#</td>
+            <td>#context.anmeldungen[a].beifahrer.vorname# #context.anmeldungen[a].beifahrer.nachname#</td>
+            <td>#context.anmeldungen[a].mechaniker.vorname# #context.anmeldungen[a].mechaniker.nachname#</td>
+            <td>#context.anmeldungen[a].fahrzeug.marke# (#context.anmeldungen[a].fahrzeug.kennzeichen#)</td>
+            <td>
+                <small><b>Format: </b>Minuten:Sekunden:Millisekunden</small><br/>
+                <div class="stationen_input_fields" data-id="#context.anmeldungen[a].id#">
+                    @for s in context.stationen@
+                    <input name="zeit_in_string[#context.anmeldungen[a].id#-#context.stationen[s].id#]" data-anmeldung-id="#context.anmeldungen[a].id#" data-station-id="#context.stationen[s].id#" class="stationen_input" placeholder="#context.stationen[s].bezeichnung#" /><br/>
+                    @endfor@
+                </div>
+                <a href="javascript:;" onclick="toggleStationen(this, #context.anmeldungen[a].id#);">
+                    Stationen anzeigen
+                </a>
+            </td>
+            <td>
+                <select data-anmeldung-id="#context.anmeldungen[a].id#" name="disquali[#context.anmeldungen[a].id#]">
+                    <option value="0" selected>Ja</option>
+                    <option value="1">Nein</option>
+                </select>
+            </td>
+            <td>
+                <select data-anmeldung-id="#context.anmeldungen[a].id#" name="stationen_ok[#context.anmeldungen[a].id#]">
+                    <option value="1" selected>Ja</option>
+                    <option value="0">Nein</option>
+                </select>
+            </td>
         </tr>
-        % endfor
+        @endfor@
     </table>
-</body>
-</html>
+
+    <button class="uk-button" type="submit">Ergebnisse speichern</button>
+</form>

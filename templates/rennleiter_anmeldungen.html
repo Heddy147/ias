@@ -1,0 +1,47 @@
+<h1>Anmeldungen zum Rennen</h1>
+<p>
+    <button class="uk-button" data-action="page.switch.index">Zurück</button>
+</p>
+
+<table class="uk-table uk-table-hover uk-table-striped uk-table-condensed">
+    <tr>
+        <th>Fahrer</th>
+        <th>Beifahrer</th>
+        <th>Mechaniker</th>
+        <th>Fahrzeugdaten</th>
+    </tr>
+    @for a in context.anmeldungen@
+    <tr>
+        <td>
+            #context.anmeldungen[a].fahrer.vorname# #context.anmeldungen[a].fahrer.nachname#<br/>
+            @if context.rennen[0].quali_eingetragen == false@
+            <a class="function" href="javascript:;" data-function="editPerson" data-action="function" data-id="#context.anmeldungen[a].fahrer.id#">Bearbeiten</a>
+            @endif@
+        </td>
+        <td>
+            #context.anmeldungen[a].beifahrer.vorname# #context.anmeldungen[a].beifahrer.nachname#<br/>
+            @if context.rennen[0].quali_eingetragen == false@
+            <a class="function" href="javascript:;" data-function="editPerson" data-action="function" data-id="#context.anmeldungen[a].beifahrer.id#">Bearbeiten</a>
+            @endif@
+        </td>
+        <td>
+            #context.anmeldungen[a].mechaniker.vorname# #context.anmeldungen[a].mechaniker.nachname#<br/>
+            @if context.rennen[0].quali_eingetragen == false@
+            <a class="function" href="javascript:;" data-function="editPerson" data-action="function" data-id="#context.anmeldungen[a].mechaniker.id#">Bearbeiten</a>
+            @endif@
+        </td>
+        <td>
+            <b>Kennzeichen: </b>#context.anmeldungen[a].fahrzeug.kennzeichen#<br/>
+            <b>Marke: </b>#context.anmeldungen[a].fahrzeug.marke#<br/>
+            <b>Typ: </b>#context.anmeldungen[a].fahrzeug.fahrzeugklasse.bezeichnung#<br/>
+            <b>Baujahr: </b>#context.anmeldungen[a].fahrzeug.baujahr#<br/>
+            <b>Hubraum: </b>#context.anmeldungen[a].fahrzeug.hubraum#<br/>
+            <b>Leistung: </b>#context.anmeldungen[a].fahrzeug.leistung#<br/>
+            <b>Beschreibung: </b>#context.anmeldungen[a].fahrzeug.beschreibung#<br/>
+            @if context.rennen[0].quali_eingetragen == false@
+            <a class="function" href="javascript:;" data-function="editUserCar" data-action="function" data-id="#context.anmeldungen[a].fahrzeug.id#">Bearbeiten</a>
+            @endif@
+        </td>
+    </tr>
+    @endfor@
+</table>
